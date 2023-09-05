@@ -1,4 +1,5 @@
 FROM maven:3-jdk-7-alpine as mvn
+RUN install git
 RUN git clone https://github.com/spring-projects/spring-petclinic.git
 RUN cd spring-petclinic && mvn package
 
