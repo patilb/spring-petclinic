@@ -1,11 +1,11 @@
-FROM maven:3-jdk-7-alpine as mvn
-RUN install git
-RUN git clone https://github.com/spring-projects/spring-petclinic.git
-RUN cd spring-petclinic && mvn package
+FROM eclipse-temurin:17-jdk-jammy
+ 
+WORKDIR /app
 
-FROM openjdk:7-jdk-alpine
-LABEL AUTHOR="patil"
-COPY --from=mvn /spring-petclinic/target/spring-petclinic*.jar /spring-petclinic.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar"]
-CMD ["/spring-petclinic.jar"]
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:resolve
+
+COPY src ./src
+
+CMD ["./mvnw", "spring-boot:run"]
